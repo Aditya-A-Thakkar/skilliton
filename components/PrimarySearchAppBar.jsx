@@ -190,6 +190,46 @@ export default function PrimarySearchAppBar() {
               {/* About Us Link */}
               <Typography
                 component="a"
+                href="/match-people"
+                sx={{
+                  ml: 2,
+                  textDecoration: 'none',
+                  color: 'white',
+                  fontWeight: 'medium',
+                  fontSize: '1.2rem', // increased size
+                  transition: 'all 0.2s ease-in-out',
+                  fontFamily: '"Poppins", sans-serif',
+                  '&:hover': {
+                    color: '#00c853', // green hover color
+                    transform: 'scale(1.02)',
+                    textDecoration: 'none',
+                  },
+                }}
+              >
+                Match
+              </Typography>
+              <Typography
+                component="a"
+                href="/swap-people"
+                sx={{
+                  ml: 2,
+                  textDecoration: 'none',
+                  color: 'white',
+                  fontWeight: 'medium',
+                  fontSize: '1.2rem', // increased size
+                  transition: 'all 0.2s ease-in-out',
+                  fontFamily: '"Poppins", sans-serif',
+                  '&:hover': {
+                    color: '#00c853', // green hover color
+                    transform: 'scale(1.02)',
+                    textDecoration: 'none',
+                  },
+                }}
+              >
+                Swap
+              </Typography>
+              <Typography
+                component="a"
                 href="/about-us"
                 sx={{
                   ml: 2,
