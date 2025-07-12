@@ -14,16 +14,16 @@ export async function GET(req) {
         where: { fromUserId: userId },
         include: {
           toUser: true,
-          offerSkill: true,
-          wantSkill: true,
+          offerSkill: { include: { skill: true } },
+          wantSkill: { include: { skill: true } },
         },
       }),
       prisma.swapRequest.findMany({
         where: { toUserId: userId },
         include: {
           fromUser: true,
-          offerSkill: true,
-          wantSkill: true,
+          offerSkill: { include: { skill: true } },
+          wantSkill: { include: { skill: true } },
         },
       }),
     ]);
@@ -38,50 +38,48 @@ export async function GET(req) {
 export async function POST(req) {
   try {
     const auth = req.headers.get("authorization");
-    if (!auth?.startsWith("Bearer ")) return new Response("Unauthorized", { status: 401 });
+    if (!auth?.startsWith("Bearer ")) {
+      return new Response("Unauthorized", { status: 401 });
+    }
 
     const token = auth.split(" ")[1];
     const { id: fromUserId } = jwt.verify(token, process.env.JWT_SECRET);
 
     const { toUserId, offerSkillName, wantSkillName } = await req.json();
 
-    // Find offered skill by current user
+    console.log("Incoming request:", { toUserId, offerSkillName, wantSkillName });
+
     const offerSkill = await prisma.userSkill.findFirst({
       where: {
         userId: fromUserId,
         type: "OFFER",
-        skill: {
-          name: offerSkillName,
-        },
+        skill: { name: offerSkillName },
       },
     });
 
-    if (!offerSkill) return new Response("Offer skill not found", { status: 400 });
-
-    // Find wanted skill from the other user
     const wantSkill = await prisma.userSkill.findFirst({
       where: {
         userId: toUserId,
-        type: "OFFER", // <- we want to get what THEY OFFER (you want it)
-        skill: {
-          name: wantSkillName,
-        },
+        type: "WANT",
+        skill: { name: wantSkillName },
       },
     });
 
-    if (!wantSkill) return new Response("Want skill not found", { status: 400 });
+    if (!offerSkill || !wantSkill) {
+      console.warn("Missing offerSkill or wantSkill:", { offerSkill, wantSkill });
+      return new Response("Invalid skills", { status: 400 });
+    }
 
-    const newRequest = await prisma.swapRequest.create({
+    await prisma.swapRequest.create({
       data: {
         fromUserId,
         toUserId,
         offerSkillId: offerSkill.id,
         wantSkillId: wantSkill.id,
-        status: "PENDING",
       },
     });
 
-    return Response.json(newRequest);
+    return new Response("Swap request sent", { status: 201 });
   } catch (err) {
     console.error("POST /swap-requests error:", err);
     return new Response("Failed to send request", { status: 500 });

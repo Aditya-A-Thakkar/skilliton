@@ -127,23 +127,18 @@ export default function SignUp(props) {
 
         if (!validateInputs()) return;
 
-        const formData = new FormData(event.currentTarget);
+        const form = new FormData(event.currentTarget);
 
-        const finalForm = {
-            name: formData.get('name'),
-            email: formData.get('email'),
-            password: formData.get('password'),
-            location: formData.get('location') || '',
+        const formData = {
+            name: form.get('name'),
+            email: form.get('email'),
+            password: form.get('password'),
+            location: form.get('location') || '',
             skillsWant,
             skillsOffer,
         };
 
-        const photo = formData.get('photo');
-        if (photo && photo.name) {
-            finalForm.append('photo', photo);
-        }
-
-        handleRegister(finalForm);
+        handleRegister(formData);
     };
 
 

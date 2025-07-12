@@ -278,7 +278,7 @@ const MatchesPage = () => {
                     );
 
                     if (offerSkill && wantSkill) {
-                      handleSwapRequest(user.id, offerSkill.id, wantSkill.id);
+                      handleSwapRequest(user.id, offerSkill.skill.name, wantSkill.skill.name);
                     } else {
                       alert("No compatible skill match found");
                     }
