@@ -285,7 +285,7 @@ export default function SignUp(props) {
                             </FormControl>
 
                             <FormControl>
-                            <FormLabel htmlFor="skillsNeed">Skills you need</FormLabel>
+                            <FormLabel htmlFor="skillsNeed">Skills you offer</FormLabel>
                             <Autocomplete
                                 multiple
                                 id="skillsNeed"
@@ -327,7 +327,7 @@ export default function SignUp(props) {
                             </FormControl>
 
                             <FormControl>
-                            <FormLabel htmlFor="location">Location (optional)</FormLabel>
+                            <FormLabel htmlFor="location">Location</FormLabel>
                             <TextField
                                 id="location"
                                 name="location"
@@ -338,7 +338,7 @@ export default function SignUp(props) {
                             </FormControl>
 
                             <FormControl>
-                            <FormLabel htmlFor="photo">Upload a photo (optional)</FormLabel>
+                            <FormLabel htmlFor="photo">Upload a photo</FormLabel>
                             <input
                                 type="file"
                                 id="photo"
@@ -347,6 +347,11 @@ export default function SignUp(props) {
                                 style={{ marginTop: '8px' }}
                             />
                             </FormControl>
+
+                        <Typography variant="body2" color="textSecondary" style={{ marginTop: '8px', marginBottom: '16px' }}>
+                        <strong>Tip:</strong> Users who upload a photo and enter a location are more 42% likely to be discovered!
+                        </Typography>
+
 
                         <FormControlLabel
                             control={<Checkbox value="remember" color="primary" />}
