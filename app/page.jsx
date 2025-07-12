@@ -14,6 +14,9 @@ import {
   ListItemText,
 } from '@mui/material';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import { Grid, Card, CardContent } from '@mui/material';
+
+
 
 const skillsList = [
   'Frontend',
@@ -33,6 +36,25 @@ const skillsList = [
   'C++',
   'Rust',
 ];
+
+const skillDescriptions = {
+  'Frontend': 'Build responsive and interactive user interfaces.',
+  'Backend': 'Manage server-side logic and databases.',
+  'React': 'Create modern web apps using React library.',
+  'Node.js': 'Build scalable backend APIs with Node.js.',
+  'UI/UX': 'Design intuitive and user-friendly experiences.',
+  'DevOps': 'Automate deployments and monitor infrastructure.',
+  'Machine Learning': 'Create models that learn from data.',
+  'Data Science': 'Analyze and visualize complex data.',
+  'Cloud': 'Deploy applications on cloud platforms.',
+  'Security': 'Protect apps and data from threats.',
+  'Marketing': 'Grow your audience and drive engagement.',
+  'Design': 'Craft stunning visuals and branding.',
+  'Python': 'Versatile programming for all domains.',
+  'JavaScript': 'Power the web with dynamic behavior.',
+  'C++': 'High-performance programming for systems.',
+  'Rust': 'Reliable and fast systems programming.',
+};
 
 export default function HomePage() {
   const [inputValue, setInputValue] = useState('');
@@ -237,12 +259,45 @@ export default function HomePage() {
 
       {/* Content Section */}
       <Container sx={{ py: 8 }}>
-        <Typography variant="h4" fontWeight="medium" gutterBottom>
+        <Typography variant="h1" fontWeight="bold" gutterBottom>
           Explore Services and Talents
         </Typography>
-        <Typography variant="body1" color="text.secondary">
+        <Typography variant="body1" color="text.secondary" sx={{ fontSize: '25px' }}>
           Discover thousands of freelancers ready to help you with anything —
           from web development and design to writing, editing, and beyond.
+        <Grid container spacing={4} sx={{ mt: 4 }}>
+        {skillsList.map((skill, idx) => (
+          <Grid item xs={12} sm={6} md={4} lg={3} key={idx}>
+            <Card
+              sx={{
+                height: '100%',
+                background: '#f3e5f5',
+                borderRadius: 3,
+                boxShadow: 3,
+                transition: 'transform 0.2s ease-in-out',
+                '&:hover': {
+                  transform: 'scale(1.03)',
+                  boxShadow: 6,
+                },
+              }}
+            >
+              <CardContent>
+                <Typography
+                  variant="h6"
+                  fontWeight="bold"
+                  sx={{ color: '#6a1b9a', mb: 1 }}
+                >
+                  {skill}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  {skillDescriptions[skill]}
+                </Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+  ))}
+</Grid>
+
         </Typography>
       </Container>
     </AppTheme>
