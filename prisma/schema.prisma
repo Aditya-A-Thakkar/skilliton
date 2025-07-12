@@ -23,6 +23,7 @@ model User {
   availability   String?
   isPublic       Boolean        @default(true)
   isBanned       Boolean        @default(false)
+  isAdmin        Boolean        @default(false)
   createdAt      DateTime       @default(now())
   skills         UserSkill[]    @relation("UserSkills")
   fromRequests   SwapRequest[]  @relation("FromUser")
