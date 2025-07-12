@@ -26,6 +26,7 @@ export default function RootLayout({ children }) {
         <RequireAuth>
           <PrimarySearchAppBar />
           {children}
+          <Footer />
         </RequireAuth>
       </body>
     </html>
