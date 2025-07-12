@@ -28,7 +28,7 @@ export default function PrimarySearchAppBar() {
       <AppBar
         position="fixed"
         sx={{
-          background: 'linear-gradient(to right, #0a0a0a, #144d1a)', // greenish-black gradient
+          background: 'linear-gradient(to right, #0a0a0a, #6a1b9a)', 
           color: 'white',
         }}
       >
@@ -67,7 +67,7 @@ export default function PrimarySearchAppBar() {
                   transition: 'all 0.2s ease-in-out',
                   fontFamily: '"Poppins", sans-serif',
                   '&:hover': {
-                    color: '#00c853', // green hover color
+                    color: '#9c27b0', // green hover color
                     transform: 'scale(1.02)',
                     textDecoration: 'none',
                   },
@@ -87,7 +87,7 @@ export default function PrimarySearchAppBar() {
                   transition: 'all 0.2s ease-in-out',
                   fontFamily: '"Poppins", sans-serif',
                   '&:hover': {
-                    color: '#00c853', // green hover color
+                    color: '#9c27b0', // green hover color
                     transform: 'scale(1.02)',
                     textDecoration: 'none',
                   },
@@ -107,7 +107,7 @@ export default function PrimarySearchAppBar() {
                   transition: 'all 0.2s ease-in-out',
                   fontFamily: '"Poppins", sans-serif',
                   '&:hover': {
-                    color: '#00c853', // green hover color
+                    color: '#9c27b0', // green hover color
                     transform: 'scale(1.02)',
                     textDecoration: 'none',
                   },
@@ -127,7 +127,7 @@ export default function PrimarySearchAppBar() {
                   transition: 'all 0.2s ease-in-out',
                   fontFamily: '"Poppins", sans-serif',
                   '&:hover': {
-                    color: '#00c853', // green hover color
+                    color: '#9c27b0',// green hover color
                     transform: 'scale(1.02)',
                     textDecoration: 'none',
                   },
@@ -147,7 +147,7 @@ export default function PrimarySearchAppBar() {
                 sx={{
                   transition: 'all 0.2s ease-in-out',
                   '&:hover': {
-                    color: '#00c853',
+                    color: '#9c27b0',
                     transform: 'scale(1.04)',
                   },
                 }}
