@@ -42,7 +42,7 @@ const ContactUsPage = () => {
   };
 
   return (
-    <Box maxWidth={600} mx="auto" p={5}>
+    <Box sx={{ maxWidth: '650px', mx: 'auto', p: 5, width: '100%' }}>
       <Typography variant="h4" mb={3} align="center">
         Contact Us
       </Typography>
@@ -110,6 +110,7 @@ const ContactUsPage = () => {
             type="file"
             accept="image/*"
             onChange={(e) => setFile(e.target.files[0])}
+            style={{ width: '100%' }}
           />
         </Box>
 
