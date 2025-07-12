@@ -265,7 +265,14 @@ export default function HomePage() {
         <Typography variant="body1" color="text.secondary" sx={{ fontSize: '25px' }}>
           Discover thousands of freelancers ready to help you with anything —
           from web development and design to writing, editing, and beyond.
-        <Grid container spacing={4} sx={{ mt: 4 }}>
+        <Grid
+          container
+          spacing={4}
+          sx={{ mt: 4 }}
+          justifyContent="center"
+          alignItems="stretch"
+        >
+
         {skillsList.map((skill, idx) => (
           <Grid item xs={12} sm={6} md={4} lg={3} key={idx}>
             <Card
