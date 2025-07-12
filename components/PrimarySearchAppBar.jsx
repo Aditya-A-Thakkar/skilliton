@@ -20,52 +20,13 @@ const poppins = Poppins({ subsets: ['latin'], weight: ['400', '500', '600'] });
 
 
 export default function PrimarySearchAppBar() {
-  const [anchorEl, setAnchorEl] = React.useState(null);
   
-
-  const isMenuOpen = Boolean(anchorEl);
-
-
-  const handleProfileMenuOpen = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
- 
-
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-    handleMobileMenuClose();
-  };
-
-
-  const menuId = 'primary-search-account-menu';
-  const renderMenu = (
-    <Menu
-      anchorEl={anchorEl}
-      anchorOrigin={{
-        vertical: 'top',
-        horizontal: 'right',
-      }}
-      id={menuId}
-      keepMounted
-      transformOrigin={{
-        vertical: 'top',
-        horizontal: 'right',
-      }}
-      open={isMenuOpen}
-      onClose={handleMenuClose}
-    >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
-    </Menu>
-  );
-
 
 
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar
-        position="static"
+        position="fixed"
         sx={{
           background: 'linear-gradient(to right, #0a0a0a, #144d1a)', // greenish-black gradient
           color: 'white',
@@ -179,10 +140,9 @@ export default function PrimarySearchAppBar() {
               <IconButton
                 size="large"
                 edge="end"
-                aria-label="account of current user"
-                aria-controls={menuId}
-                aria-haspopup="true"
-                onClick={handleProfileMenuOpen}
+                aria-label="Go to profile"
+                component="a"
+                href="/profile"
                 color="inherit"
                 sx={{
                   transition: 'all 0.2s ease-in-out',
@@ -199,7 +159,6 @@ export default function PrimarySearchAppBar() {
           </Toolbar>
 
       </AppBar>
-      {renderMenu}
     </Box>
   );
 }
