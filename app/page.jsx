@@ -79,7 +79,12 @@ export default function HomePage() {
         />
         {/* Spotlight Layer B */}
         <Box
-          sx={{
+        sx={(theme) => {
+          const radius = 120;
+          const { x, y } = mousePos;
+          const gradient = `radial-gradient(circle ${radius}px at ${x}px ${y}px, rgba(0,0,0,0.8) 40%, rgba(0,0,0,0.3) 70%, transparent 100%)`;
+
+          return {
             position: 'absolute',
             inset: 0,
             backgroundImage: "url('/imageB.jpg')",
@@ -87,10 +92,15 @@ export default function HomePage() {
             backgroundPosition: 'center',
             zIndex: 2,
             pointerEvents: 'none',
-            clipPath: `circle(150px at ${mousePos.x}px ${mousePos.y}px)`,
-            transition: 'clip-path 0.1s ease',
-          }}
-        />
+            maskImage: gradient,
+            WebkitMaskImage: gradient,
+            maskRepeat: 'no-repeat',
+            WebkitMaskRepeat: 'no-repeat',
+            transition: 'mask-image 0.1s ease, -webkit-mask-image 0.1s ease',
+          };
+        }}
+      />
+
 
         {/* Foreground Content */}
         <Box
