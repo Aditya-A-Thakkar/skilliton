@@ -17,7 +17,7 @@ const SwapRequestsPage = () => {
   // State to track the currently active tab (sent or received)
   const [activeTab, setActiveTab] = useState('sent');
 
-  // Determine which requests to show based on active tab
+    // Determine which requests to show based on active tab
   const activeRequests = requests[activeTab];
 
   useEffect(() => {
@@ -29,12 +29,34 @@ const SwapRequestsPage = () => {
         })
             .then(res => res.json())
             .then(({ sent, received }) => {
-                setSentRequests(sent);
-                setReceivedRequests(received);
+                setRequests({ sent, received });
             });
         }, []);
 
-  return (
+    const handleCancelRequest = async (requestId) => {
+        const token = localStorage.getItem("token");
+        if (!token) return alert("You must be logged in.");
+
+        const res = await fetch(`/api/swap-requests/${requestId}`, {
+            method: "DELETE",
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+
+        if (res.ok) {
+            // Remove the canceled request from UI
+            setRequests((prev) => ({
+                ...prev,
+                sent: prev.sent.filter((r) => r.id !== requestId),
+            }));
+        } else {
+            alert("Failed to cancel request.");
+        }
+    };
+
+
+    return (
     <Box p={5}>
       {/* Page title */}
       <Typography variant="h4" mb={4}>
@@ -77,8 +99,9 @@ const SwapRequestsPage = () => {
         spacing={4}
         justifyContent="center" // Center cards on wider screens
       >
-        {activeRequests.map((req) => (
-          <Grid item key={req.id} xs={12} sm={6} md={4}>
+        {activeRequests.map((req) => {
+        const user = activeTab === 'sent' ? req.toUser : req.fromUser;
+          return (<Grid item key={req.id} xs={12} sm={6} md={4}>
             <Card
               sx={{
                 p: 3,
@@ -88,7 +111,7 @@ const SwapRequestsPage = () => {
               <Stack spacing={2}>
                 {/* User profile info (photo + name + location) */}
                 <Stack direction="row" spacing={2} alignItems="center">
-                  {req.profilePhoto ? (
+                  {user?.profilePhoto ? (
                     <img
                       src={req.profilePhoto}
                       alt={req.name}
@@ -105,9 +128,9 @@ const SwapRequestsPage = () => {
                     />
                   )}
                   <Box>
-                    <Typography variant="h6">{req.name}</Typography>
+                    <Typography variant="h6">{user?.name || 'Unknown User'}</Typography>
                     <Typography variant="body2" color="text.secondary">
-                      {req.location || 'Location not provided'}
+                        {user?.location || 'Location not provided'}
                     </Typography>
                   </Box>
                 </Stack>
@@ -143,18 +166,25 @@ const SwapRequestsPage = () => {
                 </Box>
 
                 {/* Action button - label changes depending on tab */}
-                <Button
-                  fullWidth
-                  variant="outlined"
-                  color="primary"
-                  sx={{ mt: 1 }}
-                >
-                  {activeTab === 'sent' ? 'Cancel Request' : 'Respond'}
-                </Button>
+                  <Button
+                      fullWidth
+                      variant="outlined"
+                      color="primary"
+                      sx={{ mt: 1 }}
+                      onClick={() => {
+                          if (activeTab === "sent") {
+                              handleCancelRequest(req.id);
+                          } else {
+                              alert("Respond feature coming soon!");
+                          }
+                      }}
+                  >
+                      {activeTab === "sent" ? "Cancel Request" : "Respond"}
+                  </Button>
               </Stack>
             </Card>
           </Grid>
-        ))}
+          )})}
       </Grid>
     </Box>
   );
