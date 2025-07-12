@@ -17,6 +17,8 @@ import ForgotPassword from './components/ForgotPassword';
 import AppTheme from '@/components/shared-theme/AppTheme';
 import ColorModeSelect from '@/components/shared-theme/ColorModeSelect';
 import { GoogleIcon, FacebookIcon, SitemarkIcon } from './components/CustomIcons';
+import Autocomplete from '@mui/material/Autocomplete';
+
 
 const Card = styled(MuiCard)(({ theme }) => ({
     display: 'flex',
@@ -26,20 +28,23 @@ const Card = styled(MuiCard)(({ theme }) => ({
     padding: theme.spacing(4),
     gap: theme.spacing(2),
     margin: 'auto',
+    flexShrink: 0,
     [theme.breakpoints.up('sm')]: {
-        maxWidth: '450px',
+        maxWidth: '600px',
     },
     boxShadow:
         'hsla(220, 30%, 5%, 0.05) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.05) 0px 15px 35px -5px',
-    ...theme.applyStyles('dark', {
+    ...(theme.applyStyles?.('dark', {
         boxShadow:
             'hsla(220, 30%, 5%, 0.5) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.08) 0px 15px 35px -5px',
-    }),
+    }) || {}),
 }));
 
+
 const SignInContainer = styled(Stack)(({ theme }) => ({
-    height: 'calc((1 - var(--template-frame-height, 0)) * 100dvh)',
-    minHeight: '100%',
+    position: 'relative',
+    height: '100vh',
+    overflowY: 'auto',
     padding: theme.spacing(2),
     [theme.breakpoints.up('sm')]: {
         padding: theme.spacing(4),
@@ -67,6 +72,28 @@ export default function SignUp(props) {
     const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('');
     const [open, setOpen] = React.useState(false);
 
+    const skillsList = [
+    'Frontend',
+    'Backend',
+    'React',
+    'Node.js',
+    'UI/UX',
+    'DevOps',
+    'Machine Learning',
+    'Data Science',
+    'Cloud',
+    'Security',
+    'Marketing',
+    'Design',
+    'Python',
+    'JavaScript',
+    'C++',
+    'Rust',
+    ];
+
+    const [skillsWant, setSkillsWant] = React.useState([]);
+    const [skillsNeed, setSkillsNeed] = React.useState([]);
+
     const handleClickOpen = () => {
         setOpen(true);
     };
@@ -75,28 +102,47 @@ export default function SignUp(props) {
         setOpen(false);
     };
 
-    const handleRegister = async (email, password) => {
-        const res = await fetch("/api/register", {
-            method: 'POST',
-            body: JSON.stringify({ email, password }),
-            headers: { 'Content-Type': 'application/json' },
-        });
+    const handleRegister = async (formData) => {
+        try {
+            const res = await fetch("/api/register", {
+                method: 'POST',
+                body: formData,
+            });
 
-        if (res.ok) {
-            alert("Registered successfully!");
-        } else {
-            alert("Something went wrong!");
+            if (res.ok) {
+                alert("Registered successfully!");
+            } else {
+                const errorData = await res.json();
+                alert("Registration failed: " + errorData.message || "Something went wrong!");
+            }
+        } catch (err) {
+            console.error(err);
+            alert("An error occurred during registration.");
         }
     };
 
     const handleSubmit = (event) => {
-        if (emailError || passwordError) {
-            event.preventDefault();
-            return;
+        event.preventDefault();
+
+        if (!validateInputs()) return;
+
+        const formData = new FormData(event.currentTarget);
+
+        const finalForm = new FormData();
+        finalForm.append('email', formData.get('email'));
+        finalForm.append('password', formData.get('password'));
+        finalForm.append('skillsWant', JSON.stringify(skillsWant));
+        finalForm.append('skillsNeed', JSON.stringify(skillsNeed));
+        finalForm.append('location', formData.get('location') || '');
+
+        const photo = formData.get('photo');
+        if (photo && photo.name) {
+            finalForm.append('photo', photo);
         }
-        const data = new FormData(event.currentTarget);
-        handleRegister(data.get('email'), data.get('password'));
+
+        handleRegister(finalForm);
     };
+
 
     const validateInputs = () => {
         const email = document.getElementById('email');
@@ -120,6 +166,16 @@ export default function SignUp(props) {
         } else {
             setPasswordError(false);
             setPasswordErrorMessage('');
+        }
+
+        if (skillsWant.length === 0) {
+            alert("Please select at least one skill you want.");
+            isValid = false;
+        }
+
+        if (skillsNeed.length === 0) {
+            alert("Please select at least one skill you need.");
+            isValid = false;
         }
 
         return isValid;
@@ -167,6 +223,7 @@ export default function SignUp(props) {
                                 color={emailError ? 'error' : 'primary'}
                             />
                         </FormControl>
+
                         <FormControl>
                             <FormLabel htmlFor="password">Password</FormLabel>
                             <TextField
@@ -184,6 +241,113 @@ export default function SignUp(props) {
                                 color={passwordError ? 'error' : 'primary'}
                             />
                         </FormControl>
+
+                        <FormControl>
+                            <FormLabel htmlFor="skillsWant">Skills you want</FormLabel>
+                            <Autocomplete
+                                multiple
+                                id="skillsWant"
+                                options={skillsList}
+                                value={skillsWant}
+                                onChange={(event, newValue) => setSkillsWant(newValue)}
+                                renderInput={(params) => (
+                                    <TextField
+                                    {...params}
+                                    placeholder={skillsWant.length === 0 ? 'e.g. React, UI/UX' : ''}
+                                    variant="outlined"
+                                    fullWidth
+                                    sx={{
+                                        '& .MuiAutocomplete-inputRoot': {
+                                        display: 'flex',
+                                        flexWrap: 'wrap',
+                                        alignItems: 'flex-start',
+                                        minHeight: '80px',
+                                        maxHeight: '160px',
+                                        overflowY: 'auto',
+                                        paddingTop: '10px',
+                                        paddingBottom: '10px',
+                                        },
+                                        '& .MuiChip-root': {
+                                        maxWidth: '100%',
+                                        margin: '2px',
+                                        marginTop: '4px',
+                                        },
+                                        '& .MuiAutocomplete-endAdornment': {
+                                        top: 'auto',
+                                        alignSelf: 'flex-start',
+                                        marginTop: '8px',
+                                        },
+                                    }}
+                                    />
+                                )}
+                                />
+
+                            </FormControl>
+
+                            <FormControl>
+                            <FormLabel htmlFor="skillsNeed">Skills you need</FormLabel>
+                            <Autocomplete
+                                multiple
+                                id="skillsNeed"
+                                options={skillsList}
+                                value={skillsNeed}
+                                onChange={(event, newValue) => setSkillsNeed(newValue)}
+                                renderInput={(params) => (
+                                    <TextField
+                                    {...params}
+                                    placeholder={skillsNeed.length === 0 ? 'e.g. Backend, JavaScript' : ''}
+                                    variant="outlined"
+                                    fullWidth
+                                    sx={{
+                                        '& .MuiAutocomplete-inputRoot': {
+                                        display: 'flex',
+                                        flexWrap: 'wrap',
+                                        alignItems: 'flex-start',
+                                        minHeight: '80px',
+                                        maxHeight: '160px',
+                                        overflowY: 'auto',
+                                        paddingTop: '10px',
+                                        paddingBottom: '10px',
+                                        },
+                                        '& .MuiChip-root': {
+                                        maxWidth: '100%',
+                                        margin: '2px',
+                                        marginTop: '4px',
+                                        },
+                                        '& .MuiAutocomplete-endAdornment': {
+                                        top: 'auto',
+                                        alignSelf: 'flex-start',
+                                        marginTop: '8px',
+                                        },
+                                    }}
+                                    />
+                                )}
+                                />
+
+                            </FormControl>
+
+                            <FormControl>
+                            <FormLabel htmlFor="location">Location (optional)</FormLabel>
+                            <TextField
+                                id="location"
+                                name="location"
+                                placeholder="City, State"
+                                fullWidth
+                                variant="outlined"
+                            />
+                            </FormControl>
+
+                            <FormControl>
+                            <FormLabel htmlFor="photo">Upload a photo (optional)</FormLabel>
+                            <input
+                                type="file"
+                                id="photo"
+                                name="photo"
+                                accept="image/*"
+                                style={{ marginTop: '8px' }}
+                            />
+                            </FormControl>
+
                         <FormControlLabel
                             control={<Checkbox value="remember" color="primary" />}
                             label="Remember me"
@@ -195,7 +359,7 @@ export default function SignUp(props) {
                             variant="contained"
                             onClick={validateInputs}
                         >
-                            Sign in
+                            Sign Up
                         </Button>
                         <Link
                             component="button"
