@@ -132,6 +132,26 @@ const MatchesPage = () => {
     return matchOffer && matchWant;
   });
 
+  const handleSwapRequest = async (toUserId, offerSkillName, wantSkillName) => {
+    const token = localStorage.getItem("token");
+
+    const res = await fetch("/api/swap-requests", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ toUserId, offerSkillName, wantSkillName }),
+    });
+
+    if (res.ok) {
+      alert("Swap request sent!");
+    } else {
+      alert("Failed to send swap request");
+    }
+  };
+
+
   return (
     <Box p={5}>
       {/* Title */}
@@ -239,11 +259,30 @@ const MatchesPage = () => {
                 </Stack>
               </Box>
 
-              {/* Call-to-action button */}
               <Button
-                variant="contained"
-                fullWidth
-                sx={{ bgcolor: '#6a1b9a', fontSize: '1rem', py: 1 }}
+                  variant="contained"
+                  fullWidth
+                  sx={{ bgcolor: '#6a1b9a', fontSize: '1rem', py: 1 }}
+                  onClick={() => {
+                    // 🔄 Pick 1 matching offer/want pair
+                    const theirOffers = user.skills.filter(s => s.type === 'OFFER');
+                    const theirWants = user.skills.filter(s => s.type === 'WANT');
+                    const myOffers = currentUser.skills.filter(s => s.type === 'OFFER');
+                    const myWants = currentUser.skills.filter(s => s.type === 'WANT');
+
+                    const offerSkill = theirOffers.find(theirSkill =>
+                        myWants.some(myWant => myWant.skill.name === theirSkill.skill.name)
+                    );
+                    const wantSkill = theirWants.find(theirWant =>
+                        myOffers.some(myOffer => myOffer.skill.name === theirWant.skill.name)
+                    );
+
+                    if (offerSkill && wantSkill) {
+                      handleSwapRequest(user.id, offerSkill.id, wantSkill.id);
+                    } else {
+                      alert("No compatible skill match found");
+                    }
+                  }}
               >
                 Request Swap
               </Button>

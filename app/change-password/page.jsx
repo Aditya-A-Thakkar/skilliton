@@ -53,34 +53,48 @@ const ChangePasswordPage = () => {
   };
 
   // Form submission handler
-  const handleSubmit = () => {
-    const { currentPassword, newPassword, confirmNewPassword } = form;
+    const handleSubmit = async () => {
+        const { currentPassword, newPassword, confirmNewPassword } = form;
 
-    // Make sure all fields are filled
-    if (!currentPassword || !newPassword || !confirmNewPassword) {
-      setError('Please fill in all fields.');
-      return;
-    }
+        if (!currentPassword || !newPassword || !confirmNewPassword) {
+            setError("Please fill in all fields.");
+            return;
+        }
 
-    // Check if new passwords match
-    if (newPassword !== confirmNewPassword) {
-      setError('New passwords do not match.');
-      return;
-    }
+        if (newPassword !== confirmNewPassword) {
+            setError("New passwords do not match.");
+            return;
+        }
 
-    // Ensure password is strong enough
-    if (strengthScore < 60) {
-      setError('Please choose a stronger password.');
-      return;
-    }
+        if (strengthScore < 60) {
+            setError("Please choose a stronger password.");
+            return;
+        }
 
-    // Placeholder for password update API call
-    console.log('Password changed:', form);
-    setSuccess('Password updated successfully!');
-    setForm({ currentPassword: '', newPassword: '', confirmNewPassword: '' });
-  };
+        try {
+            const res = await fetch("/api/change-password", {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${localStorage.getItem("token")}`,
+                },
+                body: JSON.stringify({ currentPassword, newPassword }),
+            });
 
-  return (
+            if (res.ok) {
+                setSuccess("Password updated successfully!");
+                setForm({ currentPassword: "", newPassword: "", confirmNewPassword: "" });
+            } else {
+                const msg = await res.text();
+                setError(msg || "Failed to update password");
+            }
+        } catch (err) {
+            console.error(err);
+            setError("Something went wrong.");
+        }
+    };
+
+    return (
     <Box p={5} maxWidth={500} mx="auto">
       <Typography variant="h4" mb={4} align="center">
         Change Password
