@@ -23,6 +23,10 @@ import {
   MenuItem,
   Select,
 } from '@mui/material';
+import {
+  Dialog, DialogTitle, DialogContent, DialogActions
+} from '@mui/material';
+
 import BlockIcon from '@mui/icons-material/Block';
 import DownloadIcon from '@mui/icons-material/Download';
 import EditIcon from '@mui/icons-material/Edit';
@@ -64,6 +68,17 @@ export default function AdminDashboard() {
     const q = e.target.value.toLowerCase();
     setSearch(q);
     setFilteredUsers(users.filter(u => u.name.toLowerCase().includes(q)));
+  };
+
+  const [banDialog, setBanDialog] = useState({ open: false, userId: '', userName: '' });
+
+  const confirmBanUser = (id, name) => {
+    setBanDialog({ open: true, userId: id, userName: name });
+  };
+
+  const handleBanConfirmed = async () => {
+    await banUser(banDialog.userId);
+    setBanDialog({ open: false, userId: '', userName: '' });
   };
 
   const banUser = async (id) => {
@@ -121,7 +136,7 @@ export default function AdminDashboard() {
                     </ListItemAvatar>
                     <ListItemText primary={u.name} secondary={u.email} />
                     <ListItemSecondaryAction>
-                      <IconButton edge="end" color="error" onClick={() => banUser(u.id)}>
+                      <IconButton edge="end" color="error" onClick={() => confirmBanUser(u.id, u.name)}>
                         <BlockIcon />
                       </IconButton>
                     </ListItemSecondaryAction>
