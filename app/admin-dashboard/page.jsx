@@ -87,6 +87,21 @@ export default function AdminDashboard() {
     fetchUsers();
   };
 
+  const getStatusColor = (status) => {
+    switch (status) {
+      case 'PENDING':
+        return 'warning';
+      case 'ACCEPTED':
+        return 'success';
+      case 'REJECTED':
+        return 'error';
+      case 'DELETED':
+        return 'default';
+      default:
+        return 'info';
+    }
+  };
+
   const sendPlatformMessage = async () => {
     if (!message.trim()) return;
     await fetch('/api/admin/message', {
@@ -170,7 +185,18 @@ export default function AdminDashboard() {
                   <ListItem>
                     <ListItemText
                       primary={`Request from ${req.senderName} to ${req.receiverName}`}
-                      secondary={`Skill: ${req.skill} | Current Status: ${req.status}`}
+                      secondary={
+                        <>
+                          Skill: {req.skill} <br />
+                          Status: <Chip
+                            size="small"
+                            label={req.status}
+                            color={getStatusColor(req.status)}
+                            variant="outlined"
+                            sx={{ ml: 1 }}
+                          />
+                        </>
+                      }
                     />
                     <Select
                       value={req.status}
