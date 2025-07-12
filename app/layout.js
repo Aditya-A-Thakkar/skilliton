@@ -23,11 +23,22 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
+        <div
+          style={{
+            display: 'flex',           
+            flexDirection: 'column',   
+            minHeight: '100vh',        
+          }}
+        >
         <RequireAuth>
+
           <PrimarySearchAppBar />
-          {children}
+          <div style={{ height: '64px' }} />
+            {children}
+
           <Footer />
         </RequireAuth>
+        </div>
       </body>
     </html>
   );
