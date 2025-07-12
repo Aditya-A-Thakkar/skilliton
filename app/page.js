@@ -1,7 +1,15 @@
-import Link from "next/link";
+'use client';
 
-export default function Home() {
+import React from 'react';
+import AppTheme from '@/components/shared-theme/AppTheme';
+
+export default function HomePage() {
   return (
-      <Link href="login">Login / Register</Link>
+    <AppTheme>
+      <main style={{ padding: '2rem', textAlign: 'center' }}>
+        <h1>Welcome to the Homepage</h1>
+        <p>This is your basic home screen, styled with the shared theme.</p>
+      </main>
+    </AppTheme>
   );
 }
