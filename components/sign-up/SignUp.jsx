@@ -92,7 +92,7 @@ export default function SignUp(props) {
     ];
 
     const [skillsWant, setSkillsWant] = React.useState([]);
-    const [skillsNeed, setSkillsNeed] = React.useState([]);
+    const [skillsOffer, setSkillsOffer] = React.useState([]);
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -135,7 +135,7 @@ export default function SignUp(props) {
             password: formData.get('password'),
             location: formData.get('location') || '',
             skillsWant,
-            skillsNeed,
+            skillsOffer,
         };
 
         const photo = formData.get('photo');
@@ -176,8 +176,8 @@ export default function SignUp(props) {
             isValid = false;
         }
 
-        if (skillsNeed.length === 0) {
-            alert("Please select at least one skill you need.");
+        if (skillsOffer.length === 0) {
+            alert("Please select at least one skill you offer.");
             isValid = false;
         }
 
@@ -303,17 +303,17 @@ export default function SignUp(props) {
                             </FormControl>
 
                             <FormControl>
-                            <FormLabel htmlFor="skillsNeed">Skills you offer</FormLabel>
+                            <FormLabel htmlFor="skillsOffer">Skills you offer</FormLabel>
                             <Autocomplete
                                 multiple
-                                id="skillsNeed"
+                                id="skillsOffer"
                                 options={skillsList}
-                                value={skillsNeed}
-                                onChange={(event, newValue) => setSkillsNeed(newValue)}
+                                value={skillsOffer}
+                                onChange={(event, newValue) => setSkillsOffer(newValue)}
                                 renderInput={(params) => (
                                     <TextField
                                     {...params}
-                                    placeholder={skillsNeed.length === 0 ? 'e.g. Backend, JavaScript' : ''}
+                                    placeholder={skillsOffer.length === 0 ? 'e.g. Backend, JavaScript' : ''}
                                     variant="outlined"
                                     fullWidth
                                     sx={{
