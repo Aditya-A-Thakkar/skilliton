@@ -106,7 +106,8 @@ export default function SignUp(props) {
         try {
             const res = await fetch("/api/register", {
                 method: 'POST',
-                body: formData,
+                body: JSON.stringify(formData),
+                headers: { 'Content-Type': 'application/json' },
             });
 
             if (res.ok) {
@@ -117,7 +118,7 @@ export default function SignUp(props) {
             }
         } catch (err) {
             console.error(err);
-            alert("An error occurred during registration.");
+            alert("An error occurred during registration." + err);
         }
     };
 
@@ -128,12 +129,14 @@ export default function SignUp(props) {
 
         const formData = new FormData(event.currentTarget);
 
-        const finalForm = new FormData();
-        finalForm.append('email', formData.get('email'));
-        finalForm.append('password', formData.get('password'));
-        finalForm.append('skillsWant', JSON.stringify(skillsWant));
-        finalForm.append('skillsNeed', JSON.stringify(skillsNeed));
-        finalForm.append('location', formData.get('location') || '');
+        const finalForm = {
+            name: formData.get('name'),
+            email: formData.get('email'),
+            password: formData.get('password'),
+            location: formData.get('location') || '',
+            skillsWant,
+            skillsNeed,
+        };
 
         const photo = formData.get('photo');
         if (photo && photo.name) {
@@ -206,6 +209,21 @@ export default function SignUp(props) {
                             gap: 2,
                         }}
                     >
+                        <FormControl>
+                            <FormLabel htmlFor="name">Name</FormLabel>
+                            <TextField
+                                id="name"
+                                type="text"
+                                name="name"
+                                placeholder="Aditya"
+                                autoFocus
+                                required
+                                fullWidth
+                                variant="outlined"
+                                color='primary'
+                            />
+                        </FormControl>
+
                         <FormControl>
                             <FormLabel htmlFor="email">Email</FormLabel>
                             <TextField
