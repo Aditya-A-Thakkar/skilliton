@@ -12,11 +12,10 @@ import Badge from '@mui/material/Badge';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import MenuIcon from '@mui/icons-material/Menu';
-import SearchIcon from '@mui/icons-material/Search';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
-import MoreIcon from '@mui/icons-material/MoreVert';
+
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -166,78 +165,87 @@ export default function PrimarySearchAppBar() {
         }}
       >
         <Toolbar>
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="open drawer"
-            sx={{ mr: 2 }}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography
-            variant="h6"
-            noWrap
-            component="div"
-            sx={{
-              display: { xs: 'none', sm: 'block' },
-              fontWeight: 'bold',
-              fontSize: '1.6rem',
-              ml: 3,
-            }}
-          >
-            skillItOn
-          </Typography>
-          <Search>
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
-              placeholder="Search…"
-              inputProps={{ 'aria-label': 'search' }}
-            />
-          </Search>
-          <Box sx={{ flexGrow: 1 }} />
-          <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-            <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-              <Badge badgeContent={4} color="error">
-                <MailIcon />
-              </Badge>
-            </IconButton>
-            <IconButton
-              size="large"
-              aria-label="show 17 new notifications"
-              color="inherit"
+            <Typography
+              variant="h6"
+              noWrap
+              component="a" // make it an anchor
+              href="/"
+              sx={{
+                display: { xs: 'none', sm: 'block' },
+                fontWeight: 'bold',
+                fontSize: '1.6rem',
+                ml: '100px',
+                cursor: 'pointer',  
+                color: 'inherit', 
+              }}
             >
-              <Badge badgeContent={17} color="error">
-                <NotificationsIcon />
-              </Badge>
-            </IconButton>
-            <IconButton
-              size="large"
-              edge="end"
-              aria-label="account of current user"
-              aria-controls={menuId}
-              aria-haspopup="true"
-              onClick={handleProfileMenuOpen}
-              color="inherit"
-            >
-              <AccountCircle />
-            </IconButton>
-          </Box>
-          <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
-            <IconButton
-              size="large"
-              aria-label="show more"
-              aria-controls={mobileMenuId}
-              aria-haspopup="true"
-              onClick={handleMobileMenuOpen}
-              color="inherit"
-            >
-              <MoreIcon />
-            </IconButton>
-          </Box>
-        </Toolbar>
+              skillItOn
+            </Typography>
+
+            <Box sx={{ flexGrow: 1 }} />
+
+            {/* Right-side icons + About Us link */}
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+              {/* About Us Link */}
+              <Typography
+                component="a"
+                href="/about-us"
+                sx={{
+                  ml: 2,
+                  textDecoration: 'none',
+                  color: 'white',
+                  fontWeight: 'medium',
+                  fontSize: '1.2rem', // increased size
+                  transition: 'all 0.2s ease-in-out',
+                  '&:hover': {
+                    color: '#00c853', // green hover color
+                    transform: 'scale(1.02)',
+                    textDecoration: 'none',
+                  },
+                }}
+              >
+                About Us
+              </Typography>
+
+              <IconButton
+                size="large"
+                aria-label="show 17 new notifications"
+                color="inherit"
+                sx={{
+                  transition: 'all 0.2s ease-in-out',
+                  '&:hover': {
+                    color: '#00c853', // green
+                    transform: 'scale(1.03)', // slightly larger
+                  },
+                }}
+              >
+                <Badge badgeContent={17} color="error">
+                  <NotificationsIcon />
+                </Badge>
+              </IconButton>
+
+              <IconButton
+                size="large"
+                edge="end"
+                aria-label="account of current user"
+                aria-controls={menuId}
+                aria-haspopup="true"
+                onClick={handleProfileMenuOpen}
+                color="inherit"
+                sx={{
+                  transition: 'all 0.2s ease-in-out',
+                  '&:hover': {
+                    color: '#00c853',
+                    transform: 'scale(1.04)',
+                  },
+                }}
+              >
+                <AccountCircle />
+              </IconButton>
+
+            </Box>
+          </Toolbar>
+
       </AppBar>
       {renderMobileMenu}
       {renderMenu}
