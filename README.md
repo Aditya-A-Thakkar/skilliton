@@ -1,36 +1,130 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🛠️ Skilliton - Skill Swap Platform
 
-## Getting Started
+Skilliton is a dynamic web app that connects users based on their **offered** and **wanted** skills. Users can request swaps, rate each other post-swap, and collaborate across domains — creating a community of mutual skill sharing.
 
-First, run the development server:
+This project was built for **Odoo Hackathon 2025** 🚀
+
+---
+
+## 🌐 Live Demo
+
+Coming soon — to be deployed via **Vercel**
+
+---
+
+## 📌 Features
+
+### 👤 User Features
+- Register with name, email, location, and profile photo
+- List **skills you offer** and **skills you want**
+- Make profile **public or private**
+- Browse other users by skills
+- Send and manage **swap requests**
+- Rate users after successful swaps
+
+### 🛡️ Admin Features
+- Reject inappropriate skill descriptions
+- Ban users violating policy
+- View/manage all swap requests
+- Broadcast platform-wide messages
+- Download user activity & stats
+
+---
+
+## ⚙️ Tech Stack
+
+| Area          | Tech                                         |
+|---------------|----------------------------------------------|
+| Frontend      | Next.js (App Router), Material UI            |
+| Auth          | JSON Web Tokens (JWT), localStorage          |
+| Backend/API   | Next.js API Routes (RESTful)                 |
+| ORM/Database  | Prisma + PostgreSQL                          |
+| Deployment    | Vercel (Frontend & API), Railway (Database)  |
+
+---
+
+## 🚀 Getting Started
+
+### 🧱 1. Clone & Install
+```bash
+git clone https://github.com/your-repo/skilliton.git
+cd skilliton
+npm install
+````
+
+### ⚙️ 2. Set up your `.env`
+
+```env
+DATABASE_URL=postgresql://<user>:<password>@localhost:5432/skilliton
+JWT_SECRET=your_secret_key_here
+```
+
+Or use `.env.local` if needed.
+
+### 🛠 3. Prisma setup
+
+```bash
+npx prisma generate
+npx prisma migrate dev --name init
+npx prisma studio
+```
+
+### 🧪 4. Run the app
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+## 🧪 Sample User Flow
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. 📝 Register and select skills you **offer** and **want**
+2. 🔍 Get matched with users offering your wanted skills
+3. 🤝 Send a **swap request**
+4. ✅ Accept → Collaborate → Leave feedback
+5. 🔒 Admin ensures fairness and safety
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## 🧠 Architecture Overview
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```
+Frontend (Next.js + MUI)
+│
+├── /app (routes, pages)
+├── /components (UI + auth)
+│
+Backend (Next.js API)
+│
+├── /api/register → user signup
+├── /api/login → JWT auth
+├── /api/me → current user info
+├── /api/matches → matching logic
+│
+Database (PostgreSQL via Prisma)
+│
+├── User, Skill, UserSkill, SwapRequest models
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## 🤝 Contributing
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+This project was built by:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+* Aditya Thakkar
+* Aditey Nandan
+* Hasini G
+* Shankhadeep Ghosh
+
+For Odoo Hackathon 2025  
+> Problem Statement:- Skill Swap Platform
+
+---
+
+## 📃 License
+
+This project is under the MIT License.
+
+---
