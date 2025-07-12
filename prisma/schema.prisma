@@ -13,3 +13,61 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id             Int            @id @default(autoincrement())
+  name           String
+  email          String         @unique
+  password       String
+  location       String?
+  profilePhoto   String?
+  availability   String?
+  isPublic       Boolean        @default(true)
+  isBanned       Boolean        @default(false)
+  createdAt      DateTime       @default(now())
+  skills         UserSkill[]    @relation("UserSkills")
+  fromRequests   SwapRequest[]  @relation("FromUser")
+  toRequests     SwapRequest[]  @relation("ToUser")
+}
+
+model Skill {
+  id    Int          @id @default(autoincrement())
+  name  String       @unique
+  users UserSkill[]
+}
+
+model UserSkill {
+  id       Int     @id @default(autoincrement())
+  userId   Int
+  skillId  Int
+  type     SkillType
+
+  user     User    @relation("UserSkills", fields: [userId], references: [id])
+  skill    Skill   @relation(fields: [skillId], references: [id])
+
+  @@unique([userId, skillId, type])
+}
+
+model SwapRequest {
+  id         Int        @id @default(autoincrement())
+  fromUserId Int
+  toUserId   Int
+  status     SwapStatus @default(PENDING)
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+
+  fromUser   User       @relation("FromUser", fields: [fromUserId], references: [id])
+  toUser     User       @relation("ToUser", fields: [toUserId], references: [id])
+}
+
+enum SkillType {
+  OFFER
+  WANT
+}
+
+enum SwapStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+  DELETED
+}
