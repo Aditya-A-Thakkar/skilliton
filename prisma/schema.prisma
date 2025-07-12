@@ -51,6 +51,8 @@ model SwapRequest {
   id         Int        @id @default(autoincrement())
   fromUserId Int
   toUserId   Int
+  wantSkill  Int
+  offerSkill Int
   status     SwapStatus @default(PENDING)
   createdAt  DateTime   @default(now())
   updatedAt  DateTime   @updatedAt
