@@ -72,12 +72,37 @@ const MatchesPage = () => {
   const [currentUser, setCurrentUser] = useState(null); // Logged-in user (Aditey)
 
   useEffect(() => {
-    // Split current user from the rest
-    const current = dummyUsers.find((u) => u.name === 'Aditey');
-    const others = dummyUsers.filter((u) => u.name !== 'Aditey');
-    setCurrentUser(current);
-    setUsers(others);
+    const token = localStorage.getItem("token");
+    if (!token) return;
+
+    async function fetchMatches() {
+      const [meRes, matchesRes] = await Promise.all([
+        fetch("/api/me", {
+          headers: { Authorization: `Bearer ${token}` }
+        }),
+        fetch("/api/matches", {
+          headers: { Authorization: `Bearer ${token}` }
+        }),
+      ]);
+
+      const current = await meRes.json();
+      const matches = await matchesRes.json();
+
+      setCurrentUser(current);
+      setUsers(matches);
+    }
+
+    fetchMatches().catch(console.error);
+
   }, []);
+  useEffect(() => {
+    console.log("Current user:", currentUser);
+    console.log("Matched users:", users);
+    if (currentUser !== null) {
+      console.log("Offers:", currentUser.skills.filter(s => s.type === "OFFER").map(s => s.skill.name));
+      console.log("Wants:", currentUser.skills.filter(s => s.type === "WANT").map(s => s.skill.name));
+    }
+  }, [currentUser, users]);
 
   // Don't render anything until current user is initialized
   if (!currentUser) return null;
@@ -111,7 +136,7 @@ const MatchesPage = () => {
     <Box p={5}>
       {/* Title */}
       <Typography variant="h4" mb={4} fontSize="2rem" textAlign="center">
-        Matches for Aditey
+        Matches for {currentUser?.name || "you"}
       </Typography>
 
       {/* Grid layout to show user match cards */}
