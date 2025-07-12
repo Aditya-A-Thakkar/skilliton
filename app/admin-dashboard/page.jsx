@@ -138,17 +138,45 @@ export default function AdminDashboard() {
           </Paper>
         </Grid>
 
-        {/* Swap Stats */}
+        {/* Swap Stats + Request Monitor Combined */}
         <Grid item xs={12} md={6}>
           <Paper sx={{ p: 3 }}>
-            <Typography variant="h6" gutterBottom>Swaps Overview</Typography>
-            <Grid container spacing={1}>
+            <Typography variant="h6" gutterBottom>Swap Requests Overview & Monitor</Typography>
+            <Grid container spacing={1} sx={{ mb: 2 }}>
               {['PENDING', 'ACCEPTED', 'REJECTED', 'DELETED'].map(status => (
                 <Grid item xs={6} key={status}>
                   <Chip label={`${status}: ${swapStats[status] || 0}`} color="primary" />
                 </Grid>
               ))}
             </Grid>
+            <List sx={{ maxHeight: 300, overflowY: 'auto' }}>
+              {requests.map(req => (
+                <React.Fragment key={req.id}>
+                  <ListItem>
+                    <ListItemText
+                      primary={`Request from ${req.senderName} to ${req.receiverName}`}
+                      secondary={`Skill: ${req.skill} | Current Status: ${req.status}`}
+                    />
+                    <Select
+                      value={req.status}
+                      onChange={(e) => updateRequestStatus(req.id, e.target.value)}
+                      size="small"
+                      sx={{ minWidth: 150 }}
+                    >
+                      {['PENDING', 'ACCEPTED', 'REJECTED', 'DELETED'].map(status => (
+                        <MenuItem key={status} value={status}>{status}</MenuItem>
+                      ))}
+                    </Select>
+                  </ListItem>
+                  <Divider />
+                </React.Fragment>
+              ))}
+              {requests.length === 0 && (
+                <Box p={2}>
+                  <Typography color="text.secondary" textAlign="center">No requests found</Typography>
+                </Box>
+              )}
+            </List>
           </Paper>
         </Grid>
 
@@ -183,41 +211,6 @@ export default function AdminDashboard() {
                 {type.split('-').map(w => w[0].toUpperCase() + w.slice(1)).join(' ')}
               </Button>
             ))}
-          </Paper>
-        </Grid>
-
-        {/* Monitor Requests */}
-        <Grid item xs={12}>
-          <Paper sx={{ p: 3 }}>
-            <Typography variant="h6" gutterBottom>Monitor and Edit Swap Requests</Typography>
-            <List sx={{ maxHeight: 300, overflowY: 'auto' }}>
-              {requests.map(req => (
-                <React.Fragment key={req.id}>
-                  <ListItem>
-                    <ListItemText
-                      primary={`Request from ${req.senderName} to ${req.receiverName}`}
-                      secondary={`Skill: ${req.skill} | Current Status: ${req.status}`}
-                    />
-                    <Select
-                      value={req.status}
-                      onChange={(e) => updateRequestStatus(req.id, e.target.value)}
-                      size="small"
-                      sx={{ minWidth: 150 }}
-                    >
-                      {['PENDING', 'ACCEPTED', 'REJECTED', 'DELETED'].map(status => (
-                        <MenuItem key={status} value={status}>{status}</MenuItem>
-                      ))}
-                    </Select>
-                  </ListItem>
-                  <Divider />
-                </React.Fragment>
-              ))}
-              {requests.length === 0 && (
-                <Box p={2}>
-                  <Typography color="text.secondary" textAlign="center">No requests found</Typography>
-                </Box>
-              )}
-            </List>
           </Paper>
         </Grid>
       </Grid>
