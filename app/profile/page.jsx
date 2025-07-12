@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Typography,
@@ -48,10 +48,39 @@ const ProfilePage = () => {
   };
 
   // Called when Save button is clicked
-  const handleSave = () => {
-    console.log('Saved user:', user);
-    setEditable(false);
+  const handleSave = async () => {
+    const token = localStorage.getItem("token");
+
+    const payload = {
+      name: user.name,
+      location: user.location,
+      offerSkills: user.offerSkills,
+      wantSkills: user.wantSkills,
+    };
+
+    try {
+      const res = await fetch("/api/profile", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (res.ok) {
+        alert("Profile updated!");
+        setEditable(false);
+      } else {
+        const err = await res.text();
+        alert("Update failed: " + err);
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Something went wrong.");
+    }
   };
+
 
   // Called when user confirms account deletion
   const confirmDelete = () => {
@@ -60,6 +89,33 @@ const ProfilePage = () => {
     setDeletePassword('');
     // Actual deletion logic would go here
   };
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+
+    fetch("/api/me", {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+        .then((res) => res.json())
+        .then((data) => {
+          setUser({
+            name: data.name,
+            location: data.location || '',
+            email: data.email,
+            profilePhoto: data.profilePhoto,
+            offerSkills: data.skills
+                .filter((s) => s.type === "OFFER")
+                .map((s) => s.skill.name),
+            wantSkills: data.skills
+                .filter((s) => s.type === "WANT")
+                .map((s) => s.skill.name),
+          });
+        })
+        .catch(console.error);
+  }, []);
 
   return (
     <Box p={5} maxWidth={700} mx="auto">
@@ -115,14 +171,17 @@ const ProfilePage = () => {
               value={user.offerSkills}
               onChange={(e, value) => handleFieldChange('offerSkills', value)}
               renderTags={(value, getTagProps) =>
-                value.map((option, index) => (
-                  <Chip
-                    key={option}
-                    label={option}
-                    {...getTagProps({ index })}
-                    sx={{ bgcolor: '#f3e5f5', color: '#6a1b9a' }}
-                  />
-                ))
+                  value.map((option, index) => {
+                    const { key, ...tagProps } = getTagProps({ index });
+                    return (
+                        <Chip
+                            key={key}
+                            label={option}
+                            {...tagProps}
+                            sx={{ bgcolor: '#f3e5f5', color: '#6a1b9a' }}
+                        />
+                    );
+                  })
               }
               renderInput={(params) => (
                 <TextField {...params} label="Skills Offering" />
@@ -135,14 +194,17 @@ const ProfilePage = () => {
               value={user.wantSkills}
               onChange={(e, value) => handleFieldChange('wantSkills', value)}
               renderTags={(value, getTagProps) =>
-                value.map((option, index) => (
-                  <Chip
-                    key={option}
-                    label={option}
-                    {...getTagProps({ index })}
-                    sx={{ bgcolor: '#e1bee7', color: '#4a148c' }}
-                  />
-                ))
+                  value.map((option, index) => {
+                    const { key, ...tagProps } = getTagProps({ index });
+                    return (
+                        <Chip
+                            key={key} // ✅ explicitly set key
+                            label={option}
+                            {...tagProps} // ✅ rest of props safely spread
+                            sx={{ bgcolor: '#e1bee7', color: '#4a148c' }}
+                        />
+                    );
+                  })
               }
               renderInput={(params) => (
                 <TextField {...params} label="Skills Wanted" />

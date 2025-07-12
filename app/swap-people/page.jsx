@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Typography,
@@ -11,52 +11,28 @@ import {
   Button,
 } from '@mui/material';
 
-// Sample dummy data for sent and received swap requests
-const dummyRequests = {
-  sent: [
-    {
-      id: 1,
-      name: 'Hasini G',
-      location: 'Chennai',
-      profilePhoto: null,
-      offering: 'React',
-      requesting: 'UI/UX',
-    },
-    {
-      id: 2,
-      name: 'Shankhadeep Ghosh',
-      location: 'Kolkata',
-      profilePhoto: null,
-      offering: 'Backend',
-      requesting: 'Marketing',
-    },
-  ],
-  received: [
-    {
-      id: 3,
-      name: 'Aditya Thakkar',
-      location: 'Mumbai',
-      profilePhoto: null,
-      offering: 'UI/UX',
-      requesting: 'Backend',
-    },
-    {
-      id: 4,
-      name: 'Hasini G',
-      location: 'Chennai',
-      profilePhoto: null,
-      offering: 'Marketing',
-      requesting: 'React',
-    },
-  ],
-};
-
 const SwapRequestsPage = () => {
+  const [requests, setRequests] = useState({ sent: [], received: [] });
+
   // State to track the currently active tab (sent or received)
   const [activeTab, setActiveTab] = useState('sent');
 
   // Determine which requests to show based on active tab
-  const activeRequests = dummyRequests[activeTab];
+  const activeRequests = requests[activeTab];
+
+  useEffect(() => {
+        const token = localStorage.getItem("token");
+        if (!token) return;
+
+        fetch("/api/swap-requests", {
+            headers: { Authorization: `Bearer ${token}` },
+        })
+            .then(res => res.json())
+            .then(({ sent, received }) => {
+                setSentRequests(sent);
+                setReceivedRequests(received);
+            });
+        }, []);
 
   return (
     <Box p={5}>
@@ -142,7 +118,7 @@ const SwapRequestsPage = () => {
                     You Offer:
                   </Typography>
                   <Chip
-                    label={req.offering}
+                    label={req.offerSkill?.skill?.name || 'Unknown'}
                     sx={{
                       bgcolor: '#f3e5f5',
                       color: '#6a1b9a',
@@ -157,7 +133,7 @@ const SwapRequestsPage = () => {
                     You Receive:
                   </Typography>
                   <Chip
-                    label={req.requesting}
+                    label={req.wantSkill?.skill?.name || 'Unknown'}
                     sx={{
                       bgcolor: '#e1bee7',
                       color: '#4a148c',

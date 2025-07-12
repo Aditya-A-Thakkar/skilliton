@@ -45,20 +45,24 @@ model UserSkill {
   skill    Skill   @relation(fields: [skillId], references: [id])
 
   @@unique([userId, skillId, type])
+  offeredIn SwapRequest[] @relation("OfferSkill")
+  wantedIn  SwapRequest[] @relation("WantSkill")
 }
 
 model SwapRequest {
-  id         Int        @id @default(autoincrement())
-  fromUserId Int
-  toUserId   Int
-  wantSkill  Int
-  offerSkill Int
-  status     SwapStatus @default(PENDING)
-  createdAt  DateTime   @default(now())
-  updatedAt  DateTime   @updatedAt
+  id           Int        @id @default(autoincrement())
+  fromUserId   Int
+  toUserId     Int
+  wantSkillId  Int
+  offerSkillId Int
+  status       SwapStatus @default(PENDING)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
 
-  fromUser   User       @relation("FromUser", fields: [fromUserId], references: [id])
-  toUser     User       @relation("ToUser", fields: [toUserId], references: [id])
+  fromUser     User       @relation("FromUser", fields: [fromUserId], references: [id])
+  toUser       User       @relation("ToUser", fields: [toUserId], references: [id])
+  wantSkill    UserSkill  @relation("WantSkill", fields: [wantSkillId], references: [id])
+  offerSkill   UserSkill  @relation("OfferSkill", fields: [offerSkillId], references: [id])
 }
 
 enum SkillType {
