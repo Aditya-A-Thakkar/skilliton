@@ -9,8 +9,7 @@ import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 
 
-import MenuItem from '@mui/material/MenuItem';
-import Menu from '@mui/material/Menu';
+
 
 import AccountCircle from '@mui/icons-material/AccountCircle';
 
@@ -28,7 +27,7 @@ export default function PrimarySearchAppBar() {
       <AppBar
         position="fixed"
         sx={{
-          background: 'linear-gradient(to right, #0a0a0a, #6a1b9a)', 
+          background: 'linear-gradient(to right, #0a0a0a, #2e2e2e)',
           color: 'white',
         }}
       >
