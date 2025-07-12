@@ -18,8 +18,10 @@ import {
 } from '@mui/material';
 import { useRouter } from 'next/navigation';
 
+// All available skills for selection in Autocomplete
 const allSkills = ['React', 'Backend', 'UI/UX', 'Marketing', 'ML', 'Node.js'];
 
+// Dummy initial user data
 const initialUser = {
   name: 'Aditey',
   location: 'Bangalore',
@@ -30,26 +32,33 @@ const initialUser = {
 };
 
 const ProfilePage = () => {
+  // State to store user data and editing state
   const [user, setUser] = useState(initialUser);
-  const [editable, setEditable] = useState(false);
+  const [editable, setEditable] = useState(false); // Toggles between view/edit mode
+
+  // State for delete confirmation dialog and password input
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [deletePassword, setDeletePassword] = useState('');
+
   const router = useRouter();
 
+  // Updates user fields when inputs change
   const handleFieldChange = (field, value) => {
     setUser((prev) => ({ ...prev, [field]: value }));
   };
 
+  // Called when Save button is clicked
   const handleSave = () => {
     console.log('Saved user:', user);
     setEditable(false);
   };
 
+  // Called when user confirms account deletion
   const confirmDelete = () => {
     console.log('Deleting account with password:', deletePassword);
     setShowDeleteDialog(false);
     setDeletePassword('');
-    // Handle actual deletion here
+    // Actual deletion logic would go here
   };
 
   return (
@@ -59,7 +68,7 @@ const ProfilePage = () => {
       </Typography>
 
       <Stack spacing={4}>
-        {/* Avatar and Basic Info */}
+        {/* Avatar + basic info section */}
         <Stack direction="row" spacing={3} alignItems="center">
           {user.profilePhoto ? (
             <Avatar src={user.profilePhoto} sx={{ width: 90, height: 90 }} />
@@ -75,27 +84,31 @@ const ProfilePage = () => {
           </Box>
         </Stack>
 
-        {/* Editable Fields */}
+        {/* Editable input fields (if editing mode is enabled) */}
         {editable ? (
           <>
+            {/* Editable name field */}
             <TextField
               label="Name"
               fullWidth
               value={user.name}
               onChange={(e) => handleFieldChange('name', e.target.value)}
             />
+            {/* Editable location field */}
             <TextField
               label="Location"
               fullWidth
               value={user.location}
               onChange={(e) => handleFieldChange('location', e.target.value)}
             />
+            {/* Email is non-editable */}
             <TextField
               label="Email"
               fullWidth
               value={user.email}
               disabled
             />
+            {/* Autocomplete for offering skills */}
             <Autocomplete
               multiple
               options={allSkills}
@@ -115,6 +128,7 @@ const ProfilePage = () => {
                 <TextField {...params} label="Skills Offering" />
               )}
             />
+            {/* Autocomplete for wanted skills */}
             <Autocomplete
               multiple
               options={allSkills}
@@ -136,11 +150,14 @@ const ProfilePage = () => {
             />
           </>
         ) : (
+          // Read-only display mode
           <>
             <Typography><strong>Name:</strong> {user.name}</Typography>
             <Typography><strong>Location:</strong> {user.location}</Typography>
             <Typography><strong>Email:</strong> {user.email}</Typography>
+
             <Box>
+              {/* Skills the user is offering */}
               <Typography fontWeight={600} mb={1}>Skills Offering:</Typography>
               <Stack direction="row" spacing={1} flexWrap="wrap" mb={2}>
                 {user.offerSkills.map((skill) => (
@@ -148,6 +165,7 @@ const ProfilePage = () => {
                 ))}
               </Stack>
 
+              {/* Skills the user wants */}
               <Typography fontWeight={600} mb={1}>Skills Wanted:</Typography>
               <Stack direction="row" spacing={1} flexWrap="wrap">
                 {user.wantSkills.map((skill) => (
@@ -158,7 +176,7 @@ const ProfilePage = () => {
           </>
         )}
 
-        {/* Action Buttons */}
+        {/* Action buttons for saving or editing + navigating to change password */}
         <Stack direction="row" spacing={2}>
           <Button
             variant="contained"
@@ -177,7 +195,7 @@ const ProfilePage = () => {
           </Button>
         </Stack>
 
-        {/* Danger Zone */}
+        {/* Danger Zone Section for deleting account */}
         <Divider sx={{ my: 4 }} />
         <Typography variant="h6" color="error">
           Danger Zone
@@ -195,7 +213,7 @@ const ProfilePage = () => {
         </Button>
       </Stack>
 
-      {/* Delete Confirmation Dialog */}
+      {/* Dialog for confirming account deletion with password input */}
       <Dialog open={showDeleteDialog} onClose={() => setShowDeleteDialog(false)}>
         <DialogTitle>Confirm Account Deletion</DialogTitle>
         <DialogContent>
