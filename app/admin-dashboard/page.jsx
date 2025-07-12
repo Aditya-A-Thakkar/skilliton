@@ -20,9 +20,12 @@ import {
   Alert,
   Box,
   Chip,
+  MenuItem,
+  Select,
 } from '@mui/material';
 import BlockIcon from '@mui/icons-material/Block';
 import DownloadIcon from '@mui/icons-material/Download';
+import EditIcon from '@mui/icons-material/Edit';
 
 export default function AdminDashboard() {
   const [users, setUsers] = useState([]);
@@ -30,11 +33,13 @@ export default function AdminDashboard() {
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [swapStats, setSwapStats] = useState({});
   const [message, setMessage] = useState('');
+  const [requests, setRequests] = useState([]);
   const [snackbar, setSnackbar] = useState({ open: false, severity: 'success', text: '' });
 
   useEffect(() => {
     fetchUsers();
     fetchStats();
+    fetchRequests();
   }, []);
 
   async function fetchUsers() {
@@ -47,6 +52,12 @@ export default function AdminDashboard() {
   async function fetchStats() {
     const res = await fetch('/api/admin/swaps');
     setSwapStats(await res.json());
+  }
+
+  async function fetchRequests() {
+    const res = await fetch('/api/admin/requests');
+    const data = await res.json();
+    setRequests(data);
   }
 
   const handleSearch = (e) => {
@@ -73,6 +84,16 @@ export default function AdminDashboard() {
   };
 
   const download = (type) => window.open(`/api/admin/download/${type}`, '_blank');
+
+  const updateRequestStatus = async (id, newStatus) => {
+    await fetch(`/api/admin/requests/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status: newStatus }),
+    });
+    setSnackbar({ open: true, severity: 'success', text: 'Request updated' });
+    fetchRequests();
+  };
 
   return (
     <Container sx={{ py: 6 }}>
@@ -117,22 +138,50 @@ export default function AdminDashboard() {
           </Paper>
         </Grid>
 
-        {/* Swap Stats */}
+        {/* Swap Stats + Request Monitor Combined */}
         <Grid item xs={12} md={6}>
           <Paper sx={{ p: 3 }}>
-            <Typography variant="h6" gutterBottom>Swaps Overview</Typography>
-            <Grid container spacing={1}>
+            <Typography variant="h6" gutterBottom>Swap Requests Overview & Monitor</Typography>
+            <Grid container spacing={1} sx={{ mb: 2 }}>
               {['PENDING', 'ACCEPTED', 'REJECTED', 'DELETED'].map(status => (
                 <Grid item xs={6} key={status}>
                   <Chip label={`${status}: ${swapStats[status] || 0}`} color="primary" />
                 </Grid>
               ))}
             </Grid>
+            <List sx={{ maxHeight: 300, overflowY: 'auto' }}>
+              {requests.map(req => (
+                <React.Fragment key={req.id}>
+                  <ListItem>
+                    <ListItemText
+                      primary={`Request from ${req.senderName} to ${req.receiverName}`}
+                      secondary={`Skill: ${req.skill} | Current Status: ${req.status}`}
+                    />
+                    <Select
+                      value={req.status}
+                      onChange={(e) => updateRequestStatus(req.id, e.target.value)}
+                      size="small"
+                      sx={{ minWidth: 150 }}
+                    >
+                      {['PENDING', 'ACCEPTED', 'REJECTED', 'DELETED'].map(status => (
+                        <MenuItem key={status} value={status}>{status}</MenuItem>
+                      ))}
+                    </Select>
+                  </ListItem>
+                  <Divider />
+                </React.Fragment>
+              ))}
+              {requests.length === 0 && (
+                <Box p={2}>
+                  <Typography color="text.secondary" textAlign="center">No requests found</Typography>
+                </Box>
+              )}
+            </List>
           </Paper>
         </Grid>
 
         {/* Broadcast Message */}
-        <Grid item xs={12}>
+        <Grid item xs={12} md={6}>
           <Paper sx={{ p: 3 }}>
             <Typography variant="h6" gutterBottom>Broadcast Message</Typography>
             <TextField
@@ -148,7 +197,7 @@ export default function AdminDashboard() {
         </Grid>
 
         {/* Download Reports */}
-        <Grid item xs={12}>
+        <Grid item xs={12} md={6}>
           <Paper sx={{ p: 3 }}>
             <Typography variant="h6" gutterBottom>Download Reports</Typography>
             {['user-activity', 'feedback', 'swap-stats'].map(type => (
