@@ -1,20 +1,22 @@
-# 🛠️ Skilliton - Skill Swap Platform
+# Skilliton - Skill Swap Platform
 
-Skilliton is a dynamic web app that connects users based on their **offered** and **wanted** skills. Users can request swaps, rate each other post-swap, and collaborate across domains — creating a community of mutual skill sharing.
+Skillton is a dynamic web app,which connects users based on the skills they offer and the skills they want. Say you're a backend developer looking for someone to help you with the frontend work of your project. Lucky for you, Skilliton's got your back! You can help your match with backend development, while they assist you with frontend work. It's a win-win situation!
+Say your experience with the swap was great, you can rate your match after your swap is complete. This way, you can build a community of trusted users who are willing to help each other out.
+In case of any issues, the admin can step in to resolve disputes and ensure a fair and safe experience for all users.
 
-This project was built for **Odoo Hackathon 2025** 🚀
+This project was built for **Odoo Hackathon 2025** 
 
 ---
 
-## 🌐 Live Demo
+## Live Demo
 
 Coming soon — to be deployed via **Vercel**
 
 ---
 
-## 📌 Features
+## Features
 
-### 👤 User Features
+### User Features
 - Register with name, email, location, and profile photo
 - List **skills you offer** and **skills you want**
 - Make profile **public or private**
@@ -22,8 +24,7 @@ Coming soon — to be deployed via **Vercel**
 - Send and manage **swap requests**
 - Rate users after successful swaps
 
-### 🛡️ Admin Features
-- Reject inappropriate skill descriptions
+### Admin Features
 - Ban users violating policy
 - View/manage all swap requests
 - Broadcast platform-wide messages
@@ -31,7 +32,7 @@ Coming soon — to be deployed via **Vercel**
 
 ---
 
-## ⚙️ Tech Stack
+## Tech Stack
 
 | Area          | Tech                                         |
 |---------------|----------------------------------------------|
@@ -43,16 +44,16 @@ Coming soon — to be deployed via **Vercel**
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
-### 🧱 1. Clone & Install
+### 1. Clone & Install
 ```bash
 git clone https://github.com/your-repo/skilliton.git
 cd skilliton
 npm install
 ````
 
-### ⚙️ 2. Set up your `.env`
+### 2. Set up your `.env`
 
 ```env
 DATABASE_URL=postgresql://<user>:<password>@localhost:5432/skilliton
@@ -61,7 +62,7 @@ JWT_SECRET=your_secret_key_here
 
 Or use `.env.local` if needed.
 
-### 🛠 3. Prisma setup
+### 3. Prisma setup
 
 ```bash
 npx prisma generate
@@ -69,7 +70,7 @@ npx prisma migrate dev --name init
 npx prisma studio
 ```
 
-### 🧪 4. Run the app
+### 4. Run the app
 
 ```bash
 npm run dev
@@ -77,17 +78,17 @@ npm run dev
 
 ---
 
-## 🧪 Sample User Flow
+## Sample User Flow
 
-1. 📝 Register and select skills you **offer** and **want**
-2. 🔍 Get matched with users offering your wanted skills
-3. 🤝 Send a **swap request**
-4. ✅ Accept → Collaborate → Leave feedback
-5. 🔒 Admin ensures fairness and safety
+1. Register and select skills you **offer** and **want**
+2. Get matched with users offering your wanted skills
+3. Send a **swap request**
+4. Accept → Collaborate → Leave feedback
+5. Admin ensures fairness and safety
 
 ---
 
-## 🧠 Architecture Overview
+## Architecture Overview
 
 ```
 Frontend (Next.js + MUI)
@@ -109,7 +110,7 @@ Database (PostgreSQL via Prisma)
 
 ---
 
-## 🤝 Contributing
+## Contributing
 
 This project was built by:
 
@@ -123,7 +124,7 @@ For Odoo Hackathon 2025
 
 ---
 
-## 📃 License
+## License
 
 This project is under the MIT License.
 
