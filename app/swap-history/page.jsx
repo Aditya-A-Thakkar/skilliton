@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Box,
   Typography,
@@ -10,54 +10,59 @@ import {
   Rating,
 } from '@mui/material';
 
-const dummySwaps = [
-  {
-    id: 1,
-    partner: 'Hasini G',
-    location: 'Chennai',
-    offering: 'React',
-    receiving: 'UI/UX',
-    startDate: '2024-07-01',
-    endDate: null,
-    rating: null,
-  },
-  {
-    id: 2,
-    partner: 'Shankhadeep Ghosh',
-    location: 'Kolkata',
-    offering: 'Backend',
-    receiving: 'Marketing',
-    startDate: '2024-06-01',
-    endDate: '2024-06-15',
-    rating: 4,
-  },
-  {
-    id: 3,
-    partner: 'Aditya Thakkar',
-    location: 'Mumbai',
-    offering: 'React',
-    receiving: 'UI/UX',
-    startDate: '2024-06-10',
-    endDate: '2024-07-01',
-    rating: null,
-  },
-];
-
 const SwapHistoryPage = () => {
-  const [swaps, setSwaps] = useState(dummySwaps);
+  const [swaps, setSwaps] = useState([]);
 
-  const handleCloseSwap = (id) => {
+  // Fetch swap history from API
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) return;
+
+    fetch('/api/swaps', {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then((res) => res.json())
+      .then((data) => setSwaps(data))
+      .catch(console.error);
+  }, []);
+
+  const handleCloseSwap = async (id) => {
+    const token = localStorage.getItem('token');
+    if (!token) return;
+
+    const today = new Date().toISOString().split('T')[0];
+    await fetch(`/api/swaps/${id}`, {
+      method: 'PATCH',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ endDate: today }),
+    });
+
     setSwaps((prev) =>
       prev.map((swap) =>
-        swap.id === id ? { ...swap, endDate: new Date().toISOString().split('T')[0] } : swap
+        swap.id === id ? { ...swap, endDate: today } : swap
       )
     );
   };
 
-  const handleRate = (id, newValue) => {
+  const handleRate = async (id, newRating) => {
+    const token = localStorage.getItem('token');
+    if (!token) return;
+
+    await fetch(`/api/swaps/${id}`, {
+      method: 'PATCH',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ rating: newRating }),
+    });
+
     setSwaps((prev) =>
       prev.map((swap) =>
-        swap.id === id ? { ...swap, rating: newValue } : swap
+        swap.id === id ? { ...swap, rating: newRating } : swap
       )
     );
   };
@@ -80,13 +85,7 @@ const SwapHistoryPage = () => {
                   {section.title}
                 </Typography>
 
-                <Box
-                  sx={{
-                    display: 'flex',
-                    flexWrap: 'wrap',
-                    gap: 3,
-                  }}
-                >
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 3 }}>
                   {section.data.map((swap) => (
                     <Box
                       key={swap.id}
@@ -94,18 +93,15 @@ const SwapHistoryPage = () => {
                         border: '1px solid #ddd',
                         borderRadius: 2,
                         p: 3,
-                        width: {
-                          xs: '100%',
-                          sm: '48%',
-                        },
+                        width: { xs: '100%', sm: '48%' },
                         boxSizing: 'border-box',
                       }}
                     >
                       <Typography variant="h6" mb={0.5}>
-                        {swap.partner}
+                        {swap.partnerName}
                       </Typography>
                       <Typography color="text.secondary" mb={2}>
-                        {swap.location}
+                        {swap.partnerLocation}
                       </Typography>
 
                       <Stack direction="row" spacing={2} mb={2}>
@@ -113,13 +109,13 @@ const SwapHistoryPage = () => {
                           <Typography fontWeight={600} fontSize="1rem" mb={0.5}>
                             You Offered
                           </Typography>
-                          <Chip label={swap.offering} sx={{ bgcolor: '#f3e5f5', color: '#6a1b9a' }} />
+                          <Chip label={swap.offerSkillName} sx={{ bgcolor: '#f3e5f5', color: '#6a1b9a' }} />
                         </Box>
                         <Box>
                           <Typography fontWeight={600} fontSize="1rem" mb={0.5}>
                             You Received
                           </Typography>
-                          <Chip label={swap.receiving} sx={{ bgcolor: '#e1bee7', color: '#4a148c' }} />
+                          <Chip label={swap.wantSkillName} sx={{ bgcolor: '#e1bee7', color: '#4a148c' }} />
                         </Box>
                       </Stack>
 
