@@ -3,7 +3,7 @@ import bcrypt from 'bcryptjs';
 
 export async function POST(req) {
     try {
-        const { email, password, name, location, skillsWant = [], skillsNeed = [] } = await req.json();
+        const { email, password, name, location, skillsWant = [], skillsOffer = [] } = await req.json();
 
         if (!email || !password || !name) {
             return new Response("Missing required fields", { status: 400 });
@@ -29,7 +29,7 @@ export async function POST(req) {
 
         const allSkills = [
             ...skillsWant.map((skill) => ({ name: skill, type: "WANT" })),
-            ...skillsNeed.map((skill) => ({ name: skill, type: "OFFER" })),
+            ...skillsOffer.map((skill) => ({ name: skill, type: "OFFER" })),
         ];
 
         for (const { name: skillRaw, type } of allSkills) {
