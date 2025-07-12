@@ -15,8 +15,9 @@ import MenuIcon from '@mui/icons-material/Menu';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
+import { Poppins } from 'next/font/google';
 
-
+const poppins = Poppins({ subsets: ['latin'], weight: ['400', '500', '600'] });
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
   borderRadius: theme.shape.borderRadius,
@@ -197,6 +198,7 @@ export default function PrimarySearchAppBar() {
                   fontWeight: 'medium',
                   fontSize: '1.2rem', // increased size
                   transition: 'all 0.2s ease-in-out',
+                  fontFamily: '"Poppins", sans-serif',
                   '&:hover': {
                     color: '#00c853', // green hover color
                     transform: 'scale(1.02)',

@@ -1,5 +1,6 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import Footer from '@/components/Footer';
 import PrimarySearchAppBar from '@/components/PrimarySearchAppBar';
 import RequireAuth from "@/components/RequireAuth";
 
@@ -25,6 +26,7 @@ export default function RootLayout({ children }) {
         <RequireAuth>
           <PrimarySearchAppBar />
           {children}
+          <Footer />
         </RequireAuth>
       </body>
     </html>
