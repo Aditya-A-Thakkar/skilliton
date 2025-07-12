@@ -11,6 +11,7 @@ import {
   Button,
 } from '@mui/material';
 
+// Sample dummy data for sent and received swap requests
 const dummyRequests = {
   sent: [
     {
@@ -51,16 +52,20 @@ const dummyRequests = {
 };
 
 const SwapRequestsPage = () => {
+  // State to track the currently active tab (sent or received)
   const [activeTab, setActiveTab] = useState('sent');
+
+  // Determine which requests to show based on active tab
   const activeRequests = dummyRequests[activeTab];
 
   return (
     <Box p={5}>
+      {/* Page title */}
       <Typography variant="h4" mb={4}>
         Swap Requests
       </Typography>
 
-      {/* Centered Tabs */}
+      {/* Toggle Tabs for Sent and Received */}
       <Box
         sx={{
           borderBottom: '1px solid rgba(0, 0, 0, 0.125)',
@@ -84,16 +89,17 @@ const SwapRequestsPage = () => {
               mx: 2,
             }}
           >
+            {/* Capitalize tab labels */}
             {tab.charAt(0).toUpperCase() + tab.slice(1)}
           </Box>
         ))}
       </Box>
 
-      {/* Card Grid */}
+      {/* Grid layout for showing all requests in the active tab */}
       <Grid
         container
         spacing={4}
-        justifyContent="center"
+        justifyContent="center" // Center cards on wider screens
       >
         {activeRequests.map((req) => (
           <Grid item key={req.id} xs={12} sm={6} md={4}>
@@ -104,7 +110,7 @@ const SwapRequestsPage = () => {
               }}
             >
               <Stack spacing={2}>
-                {/* Header with Image */}
+                {/* User profile info (photo + name + location) */}
                 <Stack direction="row" spacing={2} alignItems="center">
                   {req.profilePhoto ? (
                     <img
@@ -130,7 +136,7 @@ const SwapRequestsPage = () => {
                   </Box>
                 </Stack>
 
-                {/* Offer/Request Info */}
+                {/* Skill you are offering */}
                 <Box>
                   <Typography fontSize="1rem" fontWeight={600} mb={0.5}>
                     You Offer:
@@ -145,6 +151,7 @@ const SwapRequestsPage = () => {
                   />
                 </Box>
 
+                {/* Skill you will receive from the other person */}
                 <Box>
                   <Typography fontSize="1rem" fontWeight={600} mb={0.5}>
                     You Receive:
@@ -159,7 +166,7 @@ const SwapRequestsPage = () => {
                   />
                 </Box>
 
-                {/* Button */}
+                {/* Action button - label changes depending on tab */}
                 <Button
                   fullWidth
                   variant="outlined"

@@ -11,7 +11,9 @@ import {
   Stack,
 } from '@mui/material';
 
+// Dummy list of users including the current user (Aditey) and others
 const dummyUsers = [
+  // Each user has a name, location, optional profile photo, and list of skills with OFFER or WANT type
   {
     id: 1,
     name: 'Hasini G',
@@ -53,7 +55,7 @@ const dummyUsers = [
   },
   {
     id: 4,
-    name: 'Aditey',
+    name: 'Aditey', // current user
     location: 'Bangalore',
     profilePhoto: null,
     skills: [
@@ -66,29 +68,35 @@ const dummyUsers = [
 ];
 
 const MatchesPage = () => {
-  const [users, setUsers] = useState([]);
-  const [currentUser, setCurrentUser] = useState(null);
+  const [users, setUsers] = useState([]); // All other users
+  const [currentUser, setCurrentUser] = useState(null); // Logged-in user (Aditey)
 
   useEffect(() => {
+    // Split current user from the rest
     const current = dummyUsers.find((u) => u.name === 'Aditey');
     const others = dummyUsers.filter((u) => u.name !== 'Aditey');
     setCurrentUser(current);
     setUsers(others);
   }, []);
 
+  // Don't render anything until current user is initialized
   if (!currentUser) return null;
 
+  // Extract skills Aditey is offering and wants
   const currentOffer = currentUser.skills
     .filter((s) => s.type === 'OFFER')
     .map((s) => s.skill.name.trim());
+
   const currentWant = currentUser.skills
     .filter((s) => s.type === 'WANT')
     .map((s) => s.skill.name.trim());
 
+  // Filter users who have at least one skill Aditey wants AND want at least one skill Aditey offers
   const filtered = users.filter((user) => {
     const offers = user.skills
       .filter((s) => s.type === 'OFFER')
       .map((s) => s.skill.name.trim());
+
     const wants = user.skills
       .filter((s) => s.type === 'WANT')
       .map((s) => s.skill.name.trim());
@@ -101,17 +109,19 @@ const MatchesPage = () => {
 
   return (
     <Box p={5}>
+      {/* Title */}
       <Typography variant="h4" mb={4} fontSize="2rem" textAlign="center">
         Matches for Aditey
       </Typography>
 
+      {/* Grid layout to show user match cards */}
       <Box
         sx={{
           display: 'grid',
           gridTemplateColumns: {
             xs: '1fr',
             sm: '1fr 1fr',
-            md: '1fr 1fr 1fr',
+            md: '1fr 1fr 1fr', // max 3 cards in a row
           },
           gap: 4,
           justifyContent: 'center',
@@ -120,6 +130,7 @@ const MatchesPage = () => {
         {filtered.map((user) => (
           <Card key={user.id} sx={{ p: 4 }}>
             <Stack spacing={3}>
+              {/* User profile section */}
               <Stack direction="row" spacing={3} alignItems="center">
                 {user.profilePhoto ? (
                   <Image
@@ -147,6 +158,7 @@ const MatchesPage = () => {
                 </Box>
               </Stack>
 
+              {/* Skills offering section */}
               <Box>
                 <Typography
                   fontSize="1.1rem"
@@ -174,6 +186,7 @@ const MatchesPage = () => {
                     ))}
                 </Stack>
 
+                {/* Skills wanted section */}
                 <Typography
                   fontSize="1.1rem"
                   fontWeight={600}
@@ -201,6 +214,7 @@ const MatchesPage = () => {
                 </Stack>
               </Box>
 
+              {/* Call-to-action button */}
               <Button
                 variant="contained"
                 fullWidth
