@@ -4,7 +4,10 @@ import jwt from 'jsonwebtoken';
 
 export async function POST(req) {
     try {
-        const { email, password } = await req.json();
+        const raw = await req.text();
+        console.log("Login raw body:", raw); // 🔍
+
+        const { email, password } = JSON.parse(raw);
 
         if (!email || !password) {
             return new Response("Missing credentials", { status: 400 });

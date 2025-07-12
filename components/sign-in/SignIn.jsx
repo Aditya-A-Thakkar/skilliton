@@ -17,6 +17,8 @@ import ForgotPassword from './components/ForgotPassword';
 import AppTheme from '../shared-theme/AppTheme';
 import ColorModeSelect from '../shared-theme/ColorModeSelect';
 import { GoogleIcon, FacebookIcon, SitemarkIcon } from './components/CustomIcons';
+import {router} from "next/client";
+import { useRouter } from "next/navigation";
 
 const Card = styled(MuiCard)(({ theme }) => ({
     display: 'flex',
@@ -61,6 +63,7 @@ const SignInContainer = styled(Stack)(({ theme }) => ({
 }));
 
 export default function SignIn(props) {
+    const router = useRouter();
     const [emailError, setEmailError] = React.useState(false);
     const [emailErrorMessage, setEmailErrorMessage] = React.useState('');
     const [passwordError, setPasswordError] = React.useState(false);
@@ -83,19 +86,23 @@ export default function SignIn(props) {
         });
 
         if (res.ok) {
-            alert("Login successful");
+            const { token } = await res.json();
+            localStorage.setItem("token", token);
+            router.push('/');
         } else {
             alert("Login failed");
         }
     };
 
     const handleSubmit = (event) => {
+        event.preventDefault();
         if (emailError || passwordError) {
-            event.preventDefault();
             return;
         }
         const data = new FormData(event.currentTarget);
-        handleLogin(data.get("email"), data.get("password"));
+        const email = data.get('email');
+        const password = data.get('password');
+        handleLogin(email, password);
     };
 
     const validateInputs = () => {
