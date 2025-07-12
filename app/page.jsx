@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import AppTheme from '@/components/shared-theme/AppTheme';
 import {
   Box,
@@ -12,11 +12,11 @@ import {
   List,
   ListItem,
   ListItemText,
+  Grid,
+  Card,
+  CardContent,
 } from '@mui/material';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import { Grid, Card, CardContent } from '@mui/material';
-
-
 
 const skillsList = [
   'Frontend',
@@ -60,6 +60,14 @@ export default function HomePage() {
   const [inputValue, setInputValue] = useState('');
   const [showDropdown, setShowDropdown] = useState(false);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const [adminMessages, setAdminMessages] = useState([]);
+
+  useEffect(() => {
+    fetch('/api/user/messages')
+      .then((res) => res.json())
+      .then(setAdminMessages)
+      .catch(console.error);
+  }, []);
 
   const filteredSkills = skillsList
     .filter(skill =>
@@ -101,28 +109,27 @@ export default function HomePage() {
         />
         {/* Spotlight Layer B */}
         <Box
-          sx={(theme) => {
-          const radius = 120;
-          const { x, y } = mousePos;
-          const gradient = `radial-gradient(circle ${radius}px at ${x}px ${y}px, rgba(0,0,0,0.8) 40%, rgba(0,0,0,0.3) 70%, transparent 100%)`;
+          sx={() => {
+            const radius = 120;
+            const { x, y } = mousePos;
+            const gradient = `radial-gradient(circle ${radius}px at ${x}px ${y}px, rgba(0,0,0,0.8) 40%, rgba(0,0,0,0.3) 70%, transparent 100%)`;
 
-          return {
-            position: 'absolute',
-            inset: 0,
-            backgroundImage: "url('/imageB.jpg')",
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            zIndex: 2,
-            pointerEvents: 'none',
-            maskImage: gradient,
-            WebkitMaskImage: gradient,
-            maskRepeat: 'no-repeat',
-            WebkitMaskRepeat: 'no-repeat',
-            transition: 'mask-image 0.1s ease, -webkit-mask-image 0.1s ease',
-          };
-        }}
-      />
-
+            return {
+              position: 'absolute',
+              inset: 0,
+              backgroundImage: "url('/imageB.jpg')",
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              zIndex: 2,
+              pointerEvents: 'none',
+              maskImage: gradient,
+              WebkitMaskImage: gradient,
+              maskRepeat: 'no-repeat',
+              WebkitMaskRepeat: 'no-repeat',
+              transition: 'mask-image 0.1s ease, -webkit-mask-image 0.1s ease',
+            };
+          }}
+        />
 
         {/* Foreground Content */}
         <Box
@@ -265,40 +272,59 @@ export default function HomePage() {
         <Typography variant="body1" color="text.secondary" sx={{ fontSize: '25px' }}>
           Discover thousands of freelancers ready to help you with anything —
           from web development and design to writing, editing, and beyond.
-        <Grid container spacing={4} sx={{ mt: 4 }}>
-        {skillsList.map((skill, idx) => (
-          <Grid item xs={12} sm={6} md={4} lg={3} key={idx}>
-            <Card
-              sx={{
-                height: '100%',
-                background: '#f3e5f5',
-                borderRadius: 3,
-                boxShadow: 3,
-                transition: 'transform 0.2s ease-in-out',
-                '&:hover': {
-                  transform: 'scale(1.03)',
-                  boxShadow: 6,
-                },
-              }}
-            >
-              <CardContent>
-                <Typography
-                  variant="h6"
-                  fontWeight="bold"
-                  sx={{ color: '#6a1b9a', mb: 1 }}
-                >
-                  {skill}
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  {skillDescriptions[skill]}
-                </Typography>
-              </CardContent>
-            </Card>
-          </Grid>
-  ))}
-</Grid>
-
         </Typography>
+        <Grid container spacing={4} sx={{ mt: 4 }}>
+          {skillsList.map((skill, idx) => (
+            <Grid item xs={12} sm={6} md={4} lg={3} key={idx}>
+              <Card
+                sx={{
+                  height: '100%',
+                  background: '#f3e5f5',
+                  borderRadius: 3,
+                  boxShadow: 3,
+                  transition: 'transform 0.2s ease-in-out',
+                  '&:hover': {
+                    transform: 'scale(1.03)',
+                    boxShadow: 6,
+                  },
+                }}
+              >
+                <CardContent>
+                  <Typography
+                    variant="h6"
+                    fontWeight="bold"
+                    sx={{ color: '#6a1b9a', mb: 1 }}
+                  >
+                    {skill}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    {skillDescriptions[skill]}
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
+      </Container>
+
+      {/* Admin Inbox */}
+      <Container sx={{ py: 6 }}>
+        <Typography variant="h5" fontWeight="bold" gutterBottom>Messages from Admin</Typography>
+        {adminMessages.length > 0 ? (
+          <List>
+            {adminMessages.map((msg, i) => (
+              <ListItem key={i} sx={{ bgcolor: '#f3e5f5', borderRadius: 2, mb: 2 }}>
+                <ListItemText
+                  primary={msg.subject || 'Announcement'}
+                  secondary={msg.body || msg.content}
+                  primaryTypographyProps={{ fontWeight: 'bold' }}
+                />
+              </ListItem>
+            ))}
+          </List>
+        ) : (
+          <Typography color="text.secondary">No messages yet</Typography>
+        )}
       </Container>
     </AppTheme>
   );
