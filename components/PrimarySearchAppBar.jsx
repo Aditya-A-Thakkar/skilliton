@@ -158,7 +158,13 @@ export default function PrimarySearchAppBar() {
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static">
+      <AppBar
+        position="static"
+        sx={{
+          background: 'linear-gradient(to right, #0a0a0a, #144d1a)', // greenish-black gradient
+          color: 'white',
+        }}
+      >
         <Toolbar>
           <IconButton
             size="large"
@@ -173,9 +179,14 @@ export default function PrimarySearchAppBar() {
             variant="h6"
             noWrap
             component="div"
-            sx={{ display: { xs: 'none', sm: 'block' } }}
+            sx={{
+              display: { xs: 'none', sm: 'block' },
+              fontWeight: 'bold',
+              fontSize: '1.6rem',
+              ml: 3,
+            }}
           >
-            MUI
+            skillItOn
           </Typography>
           <Search>
             <SearchIconWrapper>
